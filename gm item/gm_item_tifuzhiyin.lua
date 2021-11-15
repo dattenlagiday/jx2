@@ -88,6 +88,8 @@ function Open()
 		tSay = {
 			--"\nT¹o Boss/AddNPC",
 			"Xãa kho ®å/ClearBagAllItem",
+			format("%s/getTiLi", "Håi ThÓ Lùc"),
+			format("%s/getShaQi", "Håii S¸t KhÝ"),
 			"LÖnh GM Cò/Get_Custom_GM_Item",
 			"Gäi Boss /BossTongHop",
 			"NhËn ngo¹i trang /Mod_GetNgoaiTrang",
@@ -96,7 +98,6 @@ function Open()
 			"NhËn vËt phÈm kh¸c/Get_TieuDung",
 			"Chøc n¨ng më réng/Get_Orther",
 			"Qu¶n lý trß ch¬i/Mod_GMActions",
-			format("%s/getTiLi", "Håi phôc thÓ lùc"),
 		}
 	end
 	--tinsert(tSay, "Xãa kho ®å/ClearBagAllItem");
@@ -1101,6 +1102,12 @@ function getTiLi()
 	SetCurrentNpcSFX(PIdx2NpcIdx(),905,0,0)
 end
 
+function getShaQi()
+	SetMomentum(10);
+	PlaySound("\\sound\\sound_i016.wav");
+	SetCurrentNpcSFX(PIdx2NpcIdx(),905,0,0);
+end
+
 --Ên chuyÓn sinh
 function Get_An()
 	if gf_Judge_Room_Weight(4, 100, " ") ~= 1 then
@@ -1126,6 +1133,7 @@ function Get_Orther()
 		"Thao t¸c MËt TÞch/Get_Book",
 		"Thao t¸c Kinh M¹ch/GetJingMai",
 		"Thao t¸c Thó C­ng/Pet_OP",
+		"Kü n¨ng sèng/Life_Skill",
 		"Thao t¸c Bang Héi/TongOperation",
 		"Thao t¸c Vò KhÝ/PS_VK",
 		"LuyÖn max skill trÊn ph¸i/maxtranphai",
@@ -2893,41 +2901,6 @@ function Get_CT_NL()
 end
 
 --Get Tong NLT
-function Get_T_NLT()
-	local ID1 = 30017; --ID Trang bÞ ®Çu tiªn NLT
-	local ID2 = 30013; --ID Trang bÞ ®Çu tiªn ngäc béi NLT
-	
-	ID = {[2] = 	{3, ID1, ID2},[3] = 	{8,ID1 + 2,ID2 + 2},[4] = 	{0,ID1 + 4,ID2 + 4},[6] = 	{1,ID1 + 6,ID2 + 6},[8]= 	{2,ID1 + 10,ID2 + 10},
-		[9]= 	{10,ID1 + 12,ID2 + 12},[11]=	{0,ID1 + 14,ID2 + 14},[12]=	{5,ID1 + 18,ID2 + 18},[14]=	{2,ID1 + 22,ID2 + 22},[15]=	{9,ID1 + 26,ID2 + 26},
-		[17]=	{6,ID1 + 30,ID2 + 30},[18]=	{4,ID1 + 34,ID2 + 34},[20]=	{7,ID1 + 38,ID2 + 38},[21]=	{11,ID1 + 42,ID2 + 42},[23]=	{2,ID1 + 46,ID2 + 46},
-		[25]=	{3,ID1 + 48,ID2 + 48},[26]=	{9,ID1 + 52,ID2 + 52},[27]=	{11,ID1 + 56,ID2 + 56},[29]=	{13,ID1 + 46 + 14,ID2 + 46 + 14},[30]=	{12,ID1 + 46 + 16,ID2 + 46 + 16},
-	};
-	
-	local nRoute = GetPlayerRoute();
-	if nRoute == 8 or nRoute == 9 or nRoute == 29 or nRoute == 30 then
-		nBody = GetBody() - 3;
-	else
-		nBody = GetBody() - 1;
-	end
-	
-	for k, v in pairs(ID) do
-		if nRoute == k then
-			local nA = v[1];
-			local nID = v[2] + nBody;
-			local nNB = v[3] + nBody;
-			
-			AddItem(0, 103, nID, 1,1,-1,-1,-1,-1,-1,-1,1,15); --Trang Phôc
-			AddItem(0, 101, nID, 1,1,-1,-1,-1,-1,-1,-1,1,15);
-			AddItem(0, 100, nID, 1,1,-1,-1,-1,-1,-1,-1,1,15);
-			
-			AddItem(0, 102, nNB, 1,1,-1,-1,-1,-1,-1,-1,1,15); -- Ngäc
-			AddItem(0, 102, nNB + 64, 1,1,-1,-1,-1,-1,-1,-1,1,15);
-			AddItem(0, 102, nNB + 64 * 2, 1,1,-1,-1,-1,-1,-1,-1,1,15);
-					
-			AddItem(0, nA, nID, 1,1,-1,-1,-1,-1,-1,-1,1,15); --Vò KhÝ
-		end
-	end
-end
 
 --Get Lieu NLT
 
@@ -6098,7 +6071,9 @@ function Get_TBThuong()
 end
 
 function Get_AnKX6()
-	AddItem(2, 1, 31286,1) ;	
+	for i=1,3 do
+		AddItem(2, 1, 31286,1);	
+	end
 end
 
 function Get_KimXa()
@@ -6541,23 +6516,6 @@ function Get_DuoiTho()
 	AddItem(2, 1, 2, 10)
 end
 
--- Other Custom
-function Get_Other_Custom()
-	local szSay = {
-		g_szTitle.."Lùa chän",
-		"LuyÖn Max Skill TrÊn Ph¸i/maxtranphai",
-		"Thao t¸c Kinh M¹ch/GetJingMai",
-		"Thao t¸c thó c­ng/Pet_OP",
-		"Ph¸t s¸ng vk/PS_vk",
-		"Kü n¨ng sèng/Life_Skill",
-		"Chøc n¨ng bang héi/TongOperation",
-		"NhËn vµng bao/Get_VANGBAO1",
-		"NhËn Ên chuyÓn sinh/Get_An",
-		"Ra khái/nothing",
-	};
-	SelectSay(szSay);	
-end
-
 -- Level Custom
 function Get_Level_Custom()
 	local szSay = {
@@ -6659,4 +6617,118 @@ end
 function Get_Mer_Custom()
 	SetTask(704, 6)
 	SetTask(701, 5000000);
+end
+
+-- Other Custom
+function Get_Other_Custom()
+	local szSay = {
+		g_szTitle.."Lùa chän",
+		"NhËn C¸c Lo¹i MËt TÝch/Get_Other_Book",
+		"NhËn BÉy Ch©m/Get_Bay_Cham",
+		"Ra khái/nothing",
+	};
+	SelectSay(szSay);
+end
+
+function Get_Other_Book()
+	if 1 ~= gf_Judge_Room_Weight(25, 1, g_szTitle) then
+		return 0;
+	end
+
+	for i=51,66 do
+		AddItem(0, 107, i, 1);
+	end
+
+	AddItem(0, 107, 157, 1);
+
+	for i=159,165 do
+		AddItem(0, 107, i, 1);
+	end
+end
+
+function Get_Bay_Cham()
+	if 1 ~= gf_Judge_Room_Weight(25, 1, g_szTitle) then
+		return 0;
+	end
+
+	for i=0,9 do
+		AddItem(2, 11, i, 2000);
+	end
+
+	AddItem(2, 3, 6, 999);
+end
+
+
+function Life_Skill()
+	local tSay = {
+		"Muèn t¨ng cÊp kü n¨ng thu thËp/upgrade_gather_skill",
+		"Muèn t¨ng cÊp kü n¨ng s¶n xuÊt/upgrade_compose_skill",
+		"NhËn nguyªn liÖu chÕ trang bÞ Linh §å/get_lingtu_equip_material",
+		"T¹i h¹ chØ xem qua th«i/nothing",
+	}
+	Say(g_szTitle.."T¨ng cÊp kü n¨ng sèng", getn(tSay), tSay);
+end
+
+function upgrade_gather_skill()
+	local tGather = {1, 2, 5, 6};
+	local tName = {"§èn c©y", "Lµm da", "§µo kho¸ng", "KÐo t¬"};
+	local str = ""
+	for k, v in tName do
+		str = str.."<color=gold>"..v.."<color>,"
+	end
+	for k, v in tGather do
+		local nCur = GetLifeSkillLevel(0, v)
+		local nMax = GetLifeSkillMaxLevel(0, v);
+		if nMax > nCur then
+			local msg = g_szTitle..format("HiÖn t¹i chØ cã thÓ th¨ng cÊp kü n¨ng %s, <color=gold>%s<color> ®ang ®¹t cÊp <color=green>%d<color>, muèn th¨ng cÊp <color=gold>%s<color> ®Õn cÊp <color=green>%d<color> kh«ng?",
+				 str, tName[k], nCur, tName[k], nMax);
+			Say(msg, 2, format("§ång ý/#upgrade_gather_skill_do(%d, %d)", v, nMax), "Hñy bá/nothing")
+			return 0;
+		end
+	end
+	Talk(1,"","Kh«ng cã kü n¨ng sèng cã thÓ th¨ng cÊp, h·y ®i t×m NPC ®Ó häc vµ th¨ng cÊp giíi h¹n kü n¨ng ®Õn cÊp 99")
+end
+
+function upgrade_gather_skill_do(nSkill, nMax)
+	for i = GetLifeSkillLevel(0, nSkill), nMax do
+		AddLifeSkillExp(0, nSkill, 9999999);		
+	end
+	if 79 == nMax then
+		Talk(1,"","HiÖn ®· hoµn thµnh th¨ng cÊp kü n¨ng, h·y ®i t×m NPC ®Ó t¨ng cÊp giíi h¹n ®Õn 99 nµo!")
+	end
+	Msg2Player(format("Thµnh c«ng t¨ng cÊp kü n¨ng ®Õn cÊp %d", nMax));
+	PlaySound("\\sound\\sound_i016.wav");
+	SetCurrentNpcSFX(PIdx2NpcIdx(),905,0,0);
+end
+
+function upgrade_compose_skill()
+	local tGather = {2, 3, 4, 5, 9, 10};
+	local tName = {"ChÕ t¹o binh khÝ dµi", "ChÕ t¹o binh khÝ ng¾n", "ChÕ t¹o kú m«n binh khÝ", "Lµm hé gi¸p", "H¹ trang", "§Çu qu¸n"};
+	local str = ""
+	for k, v in tName do
+		str = str.."<color=gold>"..v.."<color>,"
+	end
+	for k, v in tGather do
+		local nCur = GetLifeSkillLevel(1, v)
+		local nMax = GetLifeSkillMaxLevel(1, v);
+		if nMax > nCur then
+			local msg = g_szTitle..format("HiÖn t¹i chØ cã thÓ th¨ng cÊp kü n¨ng %s, <color=gold>%s<color> ®ang ®¹t cÊp <color=green>%d<color>, muèn th¨ng cÊp <color=gold>%s<color> ®Õn cÊp <color=green>%d<color> kh«ng?",
+				 str, tName[k], nCur, tName[k], nMax);
+			Say(msg, 2, format("§ång ý/#upgrade_compose_skill_do(%d, %d)", v, nMax), "Hñy bá/nothing")
+			return 0;
+		end
+	end
+	Talk(1,"","Kh«ng cã kü n¨ng sèng cã thÓ th¨ng cÊp, h·y ®i t×m NPC ®Ó häc vµ th¨ng cÊp giíi h¹n kü n¨ng ®Õn cÊp 99")
+end
+
+function upgrade_compose_skill_do(nSkill, nMax)
+	for i = GetLifeSkillLevel(1, nSkill), nMax do
+		AddLifeSkillExp(1, nSkill, 9999999);		
+	end
+	if 79 == nMax then
+		Talk(1,"","HiÖn ®· hoµn thµnh th¨ng cÊp kü n¨ng, h·y ®i t×m NPC ®Ó t¨ng cÊp giíi h¹n ®Õn 99 nµo!")
+	end
+	Msg2Player(format("Thµnh c«ng t¨ng cÊp kü n¨ng ®Õn cÊp %d", nMax));
+	PlaySound("\\sound\\sound_i016.wav");
+	SetCurrentNpcSFX(PIdx2NpcIdx(),905,0,0);
 end
