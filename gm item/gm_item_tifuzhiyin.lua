@@ -89,7 +89,7 @@ function Open()
 			--"\nT¹o Boss/AddNPC",
 			"Xãa kho ®å/ClearBagAllItem",
 			format("%s/getTiLi", "Håi ThÓ Lùc"),
-			format("%s/getShaQi", "Håii S¸t KhÝ"),
+			format("%s/getShaQi", "Håi S¸t KhÝ"),
 			"LÖnh GM Cò/Get_Custom_GM_Item",
 			"Gäi Boss /BossTongHop",
 			"NhËn ngo¹i trang /Mod_GetNgoaiTrang",
@@ -2044,6 +2044,7 @@ function Get_Custom_GM_Item()
 		"NhËn C¸c Lo¹i Trang BÞ/Get_All_TB",
 		"NhËn Hoµng Kim LÖnh Bµi/Get_HKLB",
 		"Thao T¸c CÊp §é/Get_Level_Custom",
+		"VËt PhÈm NhiÖm Vô/Get_Mission_Item",
 		"Chøc n¨ng kh¸c/Get_Other_Custom",
 		"Ra khái/nothing",
 	};
@@ -2064,7 +2065,7 @@ function Get_All_TB()
 		"NhËn trang bÞ Viªm §Õ + Tö Quang/Get_TB_VD_TK",
 		"NhËn trang bÞ Tµng KiÕm + S­ M«n/Get_TB_TK_SM",
 		"NhËn trang bÞ Th«ng Dông/Get_TBThuong",
-		"NhËn trang bÞ Tiªu Dïng/Get_TieuDung",
+		"NhËn trang bÞ Tiªu Dïng/Get_TieuDung_Custom",
 		"NhËn Danh HiÖu/Get_Danh_Hieu",
 		"Ra khái/nothing",
 	};
@@ -2080,6 +2081,7 @@ function Get_TB_BHTA()
 		"Trang bÞ V« Song ChiÕn ThÇn/Get_VSCT",
 		"Trang bÞ Thiªn H¹ V« Song/Get_TB_THVS",
 		"Trang bÞ Vâ L©m B¸ Chñ/Get_TB_VLBC",
+		"Trang bÞ Thµnh Chñ QuËn Chóa/Get_TB_TCQC",
 		"CÆp ngäc Minh Tinh V« Cùc/Get_MTVC",
 		"CÆp ngäc Thiªn §Þa NhËt NguyÖt/Get_TDNN",
 		"CÆp ngäc Huy Hoµng Vinh Dù/Get_HHVD",
@@ -2235,6 +2237,18 @@ function Get_VK_TT()
 		local nB = 20019;
 		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
 	end
+
+	if nRoute == 31 then --DMNH
+		local nA = 14;
+		local nB = 20020;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
+
+	if nRoute == 32 then --CLKT
+		local nA = 2;
+		local nB = 20021;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
 	
 end
 
@@ -2290,6 +2304,21 @@ function Get_TB_VLBC()
 	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
 	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
 	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+function Get_TB_TCQC()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 8013 + GetBody() - 1;
+	
+	AddItem(0,103,nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101,nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100,nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102,nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102,nBody+4,1,1, -1,-1,-1,-1,-1,-1,1,15);
 end
 
 function Get_MTVC()
@@ -2817,8 +2846,22 @@ function Get_CT_LH()
 	SelectSay(szSay);
 end
 
---Get LH Dung Si
-function Get_LHDS()
+function Get_CT_LH()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang phôc L«i Hæ Dòng SÜ Phe Tèng/Get_T_LHDS",
+		"Trang phôc L«i Hæ T­íng Phe Tèng/Get_T_LHT",
+		"Trang phôc L«i Hæ So¸i Phe Tèng/Get_T_LHS",
+		"Trang phôc L«i Hæ Dòng SÜ Phe Liªu/Get_L_LHDS",
+		"Trang phôc L«i Hæ T­íng Phe Liªu/Get_L_LHT",
+		"Trang phôc L«i Hæ So¸i Phe Liªu/Get_L_LHS",
+		"Ra khái/nothing",
+	};
+	SelectSay(szSay);
+end
+
+--Get Tong LH Dung Si
+function Get_T_LHDS()
 	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
 		return 0;
 	end
@@ -2831,54 +2874,220 @@ function Get_LHDS()
 	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
 	AddItem(0,102, nBody-62,1,1, -1,-1,-1,-1,-1,-1,1,15);
 	AddItem(0,102, nBody-58,1,1, -1,-1,-1,-1,-1,-1,1,15);
-	
-	AddItem(0,103, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
-	AddItem(0,101, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
-	AddItem(0,100, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
-	AddItem(0,102, nBody+12-38,1,1, -1,-1,-1,-1,-1,-1,1,15);
-	AddItem(0,102, nBody+12-34,1,1, -1,-1,-1,-1,-1,-1,1,15);
 end
 
 --Get Tong LH Tuong
+function Get_T_LHT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30215 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-58,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-54,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-50,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Tong LH Soai
+function Get_T_LHS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30219 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-50,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-46,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-42,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-38,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu LH Dung Si
+function Get_L_LHDS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30223 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-38,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-34,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Lieu LH Tuong
+function Get_L_LHT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30227 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-34,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-30,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-26,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Lieu LH Soai
+function Get_L_LHS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30231 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-26,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-22,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-18,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-14,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 -- Trang bi THUONG UNG
 function Get_CT_TU()
 	local szSay = {
 		g_szTitle.."Lùa chän trang bÞ",
-		"Trang phôc Th­¬ng ¦ng §« Thèng/Get_TUDT",
-		"Trang phôc Th­¬ng ¦ng T­íng/Get_TUT",
-		"Trang phôc Th­¬ng ¦ng So¸i/Get_TUS",
+		"Trang phôc Th­¬ng ¦ng §« Thèng Phe Tèng/Get_T_TUDT",
+		"Trang phôc Th­¬ng ¦ng T­íng Phe Tèng/Get_T_TUT",
+		"Trang phôc Th­¬ng ¦ng So¸i Phe Tèng/Get_T_TUS",
+		"Trang phôc Th­¬ng ¦ng §« Thèng Phe Liªu/Get_L_TUDT",
+		"Trang phôc Th­¬ng ¦ng T­íng Phe Liªu/Get_L_TUT",
+		"Trang phôc Th­¬ng ¦ng So¸i Phe Liªu/Get_L_TUS",
 		"Ra khái/nothing",
 	};
 	SelectSay(szSay);
 end
 
 --Get Tong TU Do Thong
+function Get_T_TUDT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+	
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30029 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+15,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+19,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Tong TU Tuong
+function Get_T_TUT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30033 + GetBody() - 1;
+
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+19,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+23,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+27,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Tong TU Soai
+function Get_T_TUS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30037 + GetBody() - 1;
+
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+27,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+31,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+35,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+39,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu TU Do Thong
+function Get_L_TUDT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+	
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30041 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+39,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+43,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Lieu TU Tuong
+function Get_L_TUT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30045 + GetBody() - 1;
+
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+43,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+47,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+51,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Lieu TU Soai
+function Get_L_TUS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30049 + GetBody() - 1;
+
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+51,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+55,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+59,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+63,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Trang bi Khac
 function Get_CT_Khac()
 	local szSay = {
 		g_szTitle.."Lùa chän trang bÞ",
-		"Trang bÞ Ngù Long/Get_CT_NL",
 		"Trang bÞ §¹i Nguyªn So¸i/Get_CT_DNS",
-		"Trang bÞ T­íng Qu©n ChiÕn/Get_CT_TQ2",
-		"Trang bÞ Chiªu Th¸nh Nguyªn So¸i/Get_CT_CTNS",
-		"Trang bÞ ThiÖu Th¸nh Nguyªn So¸i/Get_CT_TTNS",
-		"Trang bÞ Ngù Long Nguyªn So¸i/Get_CT_NLNS",
+		"Trang bÞ Ngù Long T­íng/Get_CT_NL",
+		"Trang bÞ Nguyªn So¸i N©ng CÊp 2/Get_CT_NSNC2",
+		"Trang bÞ Nguyªn So¸i N©ng CÊp 1/Get_CT_NSNC1",
+		"Trang bÞ T­íng Qu©n N©ng CÊp/Get_CT_TQNC",
 		"Trang bÞ Nguyªn So¸i/Get_CT_NS",
 		"Trang bÞ T­íng Qu©n/Get_CT_TQ",
 		"Trang bÞ §« Thèng/Get_CT_DT",
@@ -2892,33 +3101,361 @@ function Get_CT_NL()
 	local szSay = {
 		g_szTitle.."Lùa chän trang bÞ",
 		"Trang phôc Ngù Long T­íng Phe Tèng/Get_T_NLT",
-		"Trang phôc Ngù Long So¸i Phe Tèng/Get_T_NLS",
 		"Trang phôc Ngù Long T­íng Phe Liªu/Get_L_NLT",
-		"Trang phôc Ngù Long So¸i Phe Tèng/Get_L_NLS",
 		"Ra khái/nothing",
 	};
 	SelectSay(szSay);
 end
 
 --Get Tong NLT
+function Get_T_NLT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30017 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody-4,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+4,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Lieu NLT
+function Get_L_NLT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 30021 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+4,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+8,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Dai Nguyen Soai
+function Get_CT_DNS()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang phôc §¹i Nguyªn So¸i Phe Tèng/Get_T_DNS",
+		"Trang phôc §¹i Nguyªn So¸i Phe Liªu/Get_L_DNS",
+		"Ra khái/nothing",
+	};
+	SelectSay(szSay);
+end
 
---Get Tuong Quan Chien
+--Get Tong DNS
+function Get_T_DNS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3024 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+32,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+36,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+40,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+44,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu DNS
+function Get_L_DNS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3028 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+44,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+50,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+54,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+58,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Tuong Quan Nang Cap
+function Get_CT_TQNC()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang phôc T­íng Qu©n ChiÕn Phe Tèng/Get_T_TQNC",
+		"Trang phôc T­íng Qu©n ChiÕn Phe Liªu/Get_L_TQNC",
+		"Ra khái/nothing",
+	};
+	SelectSay(szSay);
+end
+
+--Get Tong TQNC
+function Get_T_TQNC()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3016 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+16,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+20,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+24,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu TQNC
+function Get_L_TQNC()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3020 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+24,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+28,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+32,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+-- Trang bi NS Nang Cap 2
+function Get_CT_NSNC2()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang bÞ Ngù Long So¸i Phe Tèng/Get_T_NLS2",
+		"Trang bÞ Chiªu Th¸nh So¸i Phe Liªu/Get_L_CTS",
+	};
+	SelectSay(szSay);
+end
+
+--Get Ngu Long Soai 2
+function Get_T_NLS2()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3008 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+80,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+84,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+88,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+92,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Chieu Thanh Soai
+function Get_L_CTS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3012 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+92,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+96,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+100,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+104,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+-- Trang bi NS Nang Cap 1
+function Get_CT_NSNC1()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang bÞ Ngù Long So¸i Phe Tèng/Get_T_NLS1",
+		"Trang bÞ ThiÖu Th¸nh So¸i Phe Liªu/Get_L_TTS",
+	};
+	SelectSay(szSay);
+end
+
+--Get Ngu Long Soai 1
+function Get_T_NLS1()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3000 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+4,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+8,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 --Get Thieu Thanh Soai
+function Get_L_TTS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
 
---Get Ngu Long Soai
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 3004 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+12,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+16,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+20,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+24,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
---Get Soai
+--Trang bi Nguyen Soai
+function Get_CT_NS()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang bÞ Nguyªn So¸i Phe Tèng/Get_T_NS",
+		"Trang bÞ Nguyªn So¸i Phe Liªu/Get_L_NS",
+	};
+	SelectSay(szSay);
+end
 
---Get Tuong
+--Get Tong Nguyen Soai
+function Get_T_NS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
 
---Get Do Thong
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2251 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+50,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+54,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+250,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+254,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu Nguyen Soai
+function Get_L_NS()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2255 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+54,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+58,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+254,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+258,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Trang bi Tuong Quan
+function Get_CT_TQ()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang bÞ T­íng Qu©n Phe Tèng/Get_T_TQ",
+		"Trang bÞ T­íng Qu©n Phe Liªu/Get_L_TQ",
+	};
+	SelectSay(szSay);
+end
+
+--Get Tong Tuong Quan
+function Get_T_TQ()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2241 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+40,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+44,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+280,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu Tuong Quan
+function Get_L_TQ()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2245 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+44,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+48,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+284,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Trang bi Do Thong
+function Get_CT_DT()
+	local szSay = {
+		g_szTitle.."Lùa chän trang bÞ",
+		"Trang bÞ §« Thèng Phe Tèng/Get_T_DT",
+		"Trang bÞ §« Thèng Phe Liªu/Get_L_DT",
+	};
+	SelectSay(szSay);
+end
+
+--Get Tong Do Thong
+function Get_T_DT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2231 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+30,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+34,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
+
+--Get Lieu Do Thong
+function Get_L_DT()
+	if 1 ~= gf_Judge_Room_Weight(6, 1, g_szTitle) then
+		return 0;
+	end
+
+	local nRoute	= GetPlayerRoute();
+	local nBody 	= 2235 + GetBody() - 1;
+	
+	AddItem(0,103, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,101, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,100, nBody,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+34,1,1, -1,-1,-1,-1,-1,-1,1,15);
+	AddItem(0,102, nBody+40,1,1, -1,-1,-1,-1,-1,-1,1,15);
+end
 
 -- TRANG BI PHO BIEN
 function Get_TB_Phobien()
@@ -3095,6 +3632,18 @@ function Get_VK_AH()
 		local nB = 30903;
 		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
 	end
+
+	if nRoute == 31 then --DMNH
+		local nA = 14;
+		local nB = 32164;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
+
+	if nRoute == 32 then --CLKT
+		local nA = 2;
+		local nB = 32192;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
 end
 
 function Get_TB_HHVH()
@@ -3103,6 +3652,20 @@ function Get_TB_HHVH()
 	AddItem(2, 1, 30949 ,1);
 	AddItem(2, 1, 30977 ,1);
 	AddItem(2, 1, 30976 ,1);
+
+	local nRoute = GetPlayerRoute();
+
+	if nRoute == 31 then --DMNH
+		local nA = 14;
+		local nB = 32163;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
+
+	if nRoute == 32 then --CLKT
+		local nA = 2;
+		local nB = 32191;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
 end
 
 function Get_TB_HH()
@@ -3249,6 +3812,18 @@ function Get_VK_HH()
 		local nB = 30743;
 		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
 	end
+
+	if nRoute == 31 then --DMNH
+		local nA = 14;
+		local nB = 32162;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
+
+	if nRoute == 32 then --CLKT
+		local nA = 2;
+		local nB = 32190;
+		AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+	end
 end
 
 function Get_TB_LinhDo()
@@ -3320,6 +3895,16 @@ function Get_TB_LinhDo()
 		if nRoute == 30 then
             AddItem(0,12,30223,1,1,-1,-1,-1,-1,-1,-1,-1,15)		
 		end 
+		if nRoute == 31 then --DMNH
+			local nA = 14;
+			local nB = 32161;
+			AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+		end
+		if nRoute == 32 then --CLKT
+			local nA = 2;
+			local nB = 32189;
+			AddItem(0, nA, nB, 1,1,-1,-1,-1,-1,-1,-1,1,15);
+		end
 		if nBody == 1 then
 			AddItem(0,101,30235,1,1,-1,-1,-1,-1,-1,-1,-1,15)
 			AddItem(0,101,30239,1,1,-1,-1,-1,-1,-1,-1,-1,15)
@@ -5961,7 +6546,7 @@ function Get_TB_TK_SM()
 	local szSay = {
 		g_szTitle.."Lùa chän",
 		"Trang bÞ Thiªn Chi Tµng KiÕm/Get_TB_TCTK",
-		"Trang bÞ Tµng KiÕm 9x/Get_TB_TK9",
+		"Trang bÞ Tµng KiÕm 8x/Get_TB_TK8",
 		"Trang bÞ Tµng KiÕm 7x/Get_TB_TK7",
 		"Trang bÞ Tµng KiÕm 5x/Get_TB_TK5",
 		"Trang bÞ S­ M«n 9x/Get_TB_SM9",
@@ -6013,7 +6598,7 @@ function Get_TB_TCTK()
 	end
 end
 
-function Get_TB_TK9()
+function Get_TB_TK8()
 	if 1 ~= gf_Judge_Room_Weight(3, 1, g_szTitle) then
 		return 0;
 	end
@@ -6474,7 +7059,7 @@ function Get_HanDoi()
 end
 
 --TRANG BI TIEU DUNG
-function Get_TieuDung()
+function Get_TieuDung_Custom()
 	local szSay = {
 		g_szTitle.."Lùa chän",
 		"NhËn 10000 vµng/Get_Money",
@@ -6484,17 +7069,11 @@ function Get_TieuDung()
 		"NhËn §¸ Quý/Get_Gem",
 		"Trang bÞ TÈy Kim Xµ/Get_TKX",
 		"NhËn §u«i Thá/Get_DuoiTho",
+		"NhËn Cöu ChuyÓn/Get_9Chuyen",
 		format("%s/getTianJiaoLing", "NhËn Thiªn Kiªu LÖnh"),
 		"Ra khái/nothing",
 	};
 	SelectSay(szSay);	
-end
-
-function Get_TKX()
-	AddItem(2, 1, 30525,100);
-	AddItem(2, 1, 30526,100);
-	AddItem(2, 1, 30531,100);
-	AddItem(2, 1, 30532,100);
 end
 
 -- Custom Category
@@ -6512,8 +7091,19 @@ function Get_DuocPham()
 	AddItem(1, 0, 16, 100)
 end
 
+function Get_TKX()
+	AddItem(2, 1, 30525,100);
+	AddItem(2, 1, 30526,100);
+	AddItem(2, 1, 30531,100);
+	AddItem(2, 1, 30532,100);
+end
+
 function Get_DuoiTho()
 	AddItem(2, 1, 2, 10)
+end
+
+function Get_9Chuyen()
+	AddItem(1, 0, 32, 100)
 end
 
 -- Level Custom
@@ -6625,6 +7215,7 @@ function Get_Other_Custom()
 		g_szTitle.."Lùa chän",
 		"NhËn C¸c Lo¹i MËt TÝch/Get_Other_Book",
 		"NhËn BÉy Ch©m/Get_Bay_Cham",
+		"NhËn Cæ/Get_Co_5D",
 		"Ra khái/nothing",
 	};
 	SelectSay(szSay);
@@ -6657,6 +7248,17 @@ function Get_Bay_Cham()
 
 	AddItem(2, 3, 6, 999);
 end
+
+function Get_Co_5D()
+	if 1 ~= gf_Judge_Room_Weight(31, 1, g_szTitle) then
+		return 0;
+	end
+
+	for i=1,31 do
+		AddItem(2, 17, i, 999);
+	end
+end
+
 
 
 function Life_Skill()
@@ -6731,4 +7333,38 @@ function upgrade_compose_skill_do(nSkill, nMax)
 	Msg2Player(format("Thµnh c«ng t¨ng cÊp kü n¨ng ®Õn cÊp %d", nMax));
 	PlaySound("\\sound\\sound_i016.wav");
 	SetCurrentNpcSFX(PIdx2NpcIdx(),905,0,0);
+end
+
+function Get_Mission_Item()
+	local szSay = {
+		g_szTitle.."Lùa chän",
+		"NhiÖm vô Ph­îng T­êng/Get_PT_Item",
+		"Ra khái/nothing",
+	};
+	SelectSay(szSay);
+end
+
+function Get_PT_Item()
+	for i=686,688 do
+		AddItem(2, 0, i, 1);
+	end
+
+	AddItem(2, 0, 689, 10);
+
+	for i=690,691 do
+		AddItem(2, 0, i, 1);
+	end
+
+	for i=695,696 do
+		AddItem(2, 0, i, 10);
+	end
+
+	-- for i=697,707 do
+	-- 	AddItem(2, 0, i, 1);
+	-- end
+
+	-- AddItem(2, 0, 708, 10);
+	-- AddItem(2, 0, 710, 10);
+	-- AddItem(2, 0, 722, 10);
+	
 end
